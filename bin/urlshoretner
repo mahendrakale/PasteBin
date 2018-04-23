@@ -1,0 +1,60 @@
+#!/bin/bash
+
+server="http://localhost:8080"
+cmd=$1
+content=$2
+
+print_usage() {
+    echo "";
+    echo "Usage :";
+    echo "";
+    echo "      ./urlshortener shorten <URL>";
+    echo "";
+    echo "      This command will create a shortened version of given url";
+    echo "      and display it on screen";
+    echo "";
+    echo "";
+    echo "      ./urlshortener unshorten <shortened URL>"
+    echo "";
+    echo "      This command should display original url of given shortened url";
+    echo "";
+    echo "Example :"
+    echo "";
+    echo "      Sample input and output "
+    echo "      ------------------------";
+    echo "";
+    echo "      $> urlshoretner shorten http://clypd.com/careers "
+    echo "      Output: http://u.rl/abc";
+    echo "";
+    echo "      $> urlshoretner unshorten http://u.rl/abc";
+    echo "      Output : http://clypd.com/careers";
+    echo "";
+    echo "";
+    echo "                         -- by Mahendra Kale (mahendra.kale@gmail.com)";
+    echo "";
+}
+
+if [ "$cmd" != "shorten" -a  "$cmd" != "unshorten" -o "$content" = "" ]
+then
+    print_usage
+fi
+
+if [ "$cmd" = "shorten" ]
+then
+    short=$(curl -s -F "content=$2" -H "Content-Type: multipart/form-data" $server'/short')
+    echo "";
+    echo "Output : "
+    echo $short
+    echo "";
+fi
+
+if [ "$cmd" = "unshorten" ]
+then
+    id=${content##*/}
+    unshort=$(curl -s $server'/'$id)
+    echo "";
+    echo "Output : "
+    echo $unshort
+    echo "";
+fi
+
